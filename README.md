@@ -1,17 +1,20 @@
-## My Project
+# ThunderaBSA-Cli
 
-TODO: Fill this README out!
+ThunderaBSA it's a Binary Static Analysis tool that infers what Open Source packages are present on binary apps by searching for "symbols."
 
-Be sure to:
+A "symbol" for ThunderaBSA it's the representation of a file property (file name, file path, folders names) or content (symtree, class names, function names, variable names).
 
-* Change the title in this README
-* Edit your repository description on GitHub
+ThunderaBSA doesn't perform reverse engineering over the software. Instead, it extracts the symbols offered by the file's metadata, the same way as the operative system scan for file mime-types or file sizes.
 
-## Security
+The CLI (ThunderaBSA CLI) it's one of the three main components of the project. The CLI tool scan files to extract symbols and export the "symbols" to a report file. The reports can be used later by other components to perform the symbol matching offline.
 
-See [CONTRIBUTING](CONTRIBUTING.md#security-issue-notifications) for more information.
+## Installation
+ThunderaBSA-CLI requires a few tools to be available on your system:
 
-## License
+$ sudo apt install python3-pip
 
-This project is licensed under the Apache-2.0 License.
+$ sudo apt install universal-ctags elfutils binutils libimage-exiftool-perl
 
+$ pip3 install thundera-bsa
+
+If you are not able to find universal-ctags, please install the package from source. This tool will not work with the Ubuntu package exuberant-ctags, you need to install universal-ctags

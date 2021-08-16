@@ -1,0 +1,15 @@
+Metadata-Version: 0.1.6
+Name: thundera-bsa
+Version: 0.1.6
+Summary: Thundera Binary Static Analyzer (CLI)
+Home-page: https://github.com/amazon-ospo/thunderabsa-cli
+Author: Oscar Valenzuela B.
+Author-email: thunderabsa-pypi@amazon.com
+License: Apache-2.0
+Description: ThunderaBSA Cli - File Scanner and Symbol Extract
+Keywords: thundera, bsa, binary, compliance, opensource, legal
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: Operating System :: POSIX :: Linux
+Classifier: Development Status :: 3 - Alpha
+License :: OSI Approved :: Apache Software License
