@@ -4,7 +4,7 @@ import sys
 from setuptools import setup, find_packages
 
 HERE = pathlib.Path(__file__).parent
-VERSION = '0.1.5'
+VERSION = '0.1.7'
 PACKAGE_NAME = 'thundera-bsa'
 AUTHOR = 'Oscar Valenzuela B.'
 AUTHOR_EMAIL = 'thunderabsa-pypi@amazon.com'

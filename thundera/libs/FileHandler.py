@@ -32,6 +32,7 @@ class FileHandler:
             'application/x-mach-binary': self.handle_mach_o,
             'application/x-sharedlib': self.handle_sharedlib,
             'application/x-dosexec': self.handle_strings,
+            'application/x-archive': self.handle_ar,
             'font/sfnt': self.handle_strings,
 
             'application/octet-stream': self.ignore,
@@ -71,6 +72,24 @@ class FileHandler:
     def ignore(self, filepath, filename, checksum):
         self.debug.info('skipping ' + self.filename)
         return ''
+
+    def handle_ar(self, filepath, filename, checksum):
+        fullpath = filepath+"/"+filename
+        if(path.exists(fullpath)):
+            cmd = 'ar t ' + fullpath
+            process = subprocess.Popen(
+                cmd,
+                shell=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE)
+            (result, error) = process.communicate()
+            rc = process.wait()
+            process.stdout.close()
+            rstTXT = result.decode('utf-8')
+            results = self.stripNonAlphaNum(' '.join(rstTXT.split()))
+            prow = checksum + ",".join(results)
+            prow = prow + "," + os.path.splitext(filename)[0]
+            return prow
 
     def handle_strings(self, filepath, filename, checksum):
         fullpath = filepath+"/"+filename
