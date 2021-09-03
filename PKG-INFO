@@ -1,6 +1,6 @@
-Metadata-Version: 0.1.6
+Metadata-Version:  0.1.6
 Name: thundera-bsa
-Version: 0.1.6
+Version:  0.1.6
 Summary: Thundera Binary Static Analyzer (CLI)
 Home-page: https://github.com/amazon-ospo/thunderabsa-cli
 Author: Oscar Valenzuela B.
