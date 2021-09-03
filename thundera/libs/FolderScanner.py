@@ -9,6 +9,7 @@ import sys
 from slugify import slugify
 from zipfile import ZipFile
 from tabulate import tabulate
+from pathlib import Path
 from . import File
 from . import ArchiveHandler
 from . import ErrorHandler
@@ -129,15 +130,17 @@ class FolderScanner:
 
         for (dirpath, dirnames, filenames) in os.walk(rootfolder):
             for f in filenames:
-                if len(pfile.strip()) <= 1:
-                    self.lcounter += 1
-                    self.progress(self.lcounter, self.file_count)
-                fileInfo = File.File(self.debug, dirpath, f, pfile)
-                self.filelist.append(fileInfo)
-                symbols = fileInfo.get_symbols()
-                if len(symbols) >= 1:
-                    tmpCSV = symbols[list(symbols.keys())[0]].split(',', 1)
-                    self.symbols[tmpCSV[0]] = tmpCSV[1]
+                if not Path(os.path.join(dirpath, f)).is_symlink():
+                    if len(pfile.strip()) <= 1:
+                        self.lcounter += 1
+                        self.progress(self.lcounter, self.file_count)
+                    fileInfo = File.File(self.debug, dirpath, f, pfile)
+                    self.filelist.append(fileInfo)
+                    symbols = fileInfo.get_symbols()
+                    if len(symbols) >= 1:
+                        tmpCSV = symbols[list(symbols.keys())[0]].split(',', 1)
+                        self.symbols[tmpCSV[0]] = tmpCSV[1]
+
             for d in dirnames:
                 self.folders[d] = dirpath
         if len(pfile.strip()) <= 1:
