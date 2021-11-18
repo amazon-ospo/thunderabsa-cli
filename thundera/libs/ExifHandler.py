@@ -19,7 +19,6 @@ class ExifHandler:
             'Comments']
         self.fileMeta = {}
 
-
     def run(self):
         if(path.exists(self.target)):
             cmd = "exiftool -json " + self.target
