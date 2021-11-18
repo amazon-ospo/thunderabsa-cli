@@ -176,9 +176,9 @@ class FileHandler:
             rstTXT = result.decode('utf-8')
             row = ""
             results = self.stripNonAlphaNum(','.join(rstTXT.split()))
-            for x in results:
-                if x.startswith('_Z'):
-                    row = row + ",".join(self.demangle(x))
+            for sym in results:
+                if sym.startswith('_Z'):
+                    row = row + ",".join(self.demangle(sym))
             row = list(set(row.split(',')))
             prow = checksum + ','
             prow = prow + ",".join(row)
@@ -255,5 +255,4 @@ class FileHandler:
     def demangle(self, name):
         dstring = demangle(name)
         results = self.stripNonAlphaNum(dstring)
-        print(name, dstring)
-        return results
+        return ' '.join(results).split()
