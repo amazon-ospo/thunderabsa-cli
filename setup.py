@@ -21,7 +21,8 @@ INSTALL_REQUIRES = [
       'binaryornot',
       'tabulate',
       'numpy',
-      'lief'
+      'lief',
+      'demangler'
 ]
 
 setup(

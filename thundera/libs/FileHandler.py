@@ -8,6 +8,8 @@ import subprocess
 from os import path
 from string import digits
 from . import CtagsHandler
+from demangler import demangle
+
 
 class FileHandler:
 
@@ -63,6 +65,7 @@ class FileHandler:
         try:
             handlers = self.preload_handlers()
             handler = handlers[self.filetype]
+            print(self.filetype, self.filename)
             return handler(self.filepath, self.filename, self.checksum)
         except KeyError:
             self.debug.error('handler not implemented for ' + self.filetype)
@@ -89,6 +92,27 @@ class FileHandler:
             results = self.stripNonAlphaNum(' '.join(rstTXT.split()))
             prow = checksum + ",".join(results)
             prow = prow + "," + os.path.splitext(filename)[0]
+
+            cmd = 'strings -n 5 ' + fullpath
+            process = subprocess.Popen(
+                cmd,
+                shell=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE)
+            (result, error) = process.communicate()
+            rc = process.wait()
+            process.stdout.close()
+            rstTXT = result.decode('utf-8')
+            row = ""
+            results = self.stripNonAlphaNum(','.join(rstTXT.split()))
+            for x in results:
+                if x.startswith('_Z'):
+                    row = row + ",".join(self.demangle(x))
+            row = list(set(row.split(',')))
+
+            prow = prow + ",".join(row)
+            prow = prow + "," + os.path.splitext(filename)[0]
+
             return prow
 
     def handle_strings(self, filepath, filename, checksum):
@@ -126,12 +150,6 @@ class FileHandler:
         fullPath = os.path.join(filepath, filename)
         libSO = lief.parse(fullPath)
         symbols = []
-        #for c in libSO.commands:
-        #    if c.command.name in ["LOAD_DYLIB", "LOAD_WEAK_DYLIB"]:
-        #        print("{:20} {}".format(
-        #            c.command.name,
-        #            c.name
-        #        ))
         remove_digits = str.maketrans(',', ',', digits)
         for i in libSO.symbols:
             symbol = i.name
@@ -141,8 +159,30 @@ class FileHandler:
         symbols = list(set(symbols))
         while("" in symbols):
             symbols.remove("")
+
         prow = checksum + ','
         prow = prow + ",".join(symbols)
+
+        if len(symbols) <=1:
+            cmd = 'strings -n 5 ' + fullPath
+            process = subprocess.Popen(
+                cmd,
+                shell=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE)
+            (result, error) = process.communicate()
+            rc = process.wait()
+            process.stdout.close()
+            rstTXT = result.decode('utf-8')
+            row = ""
+            results = self.stripNonAlphaNum(','.join(rstTXT.split()))
+            for sym in results:
+                if sym.startswith('_Z'):
+                    row = row + ",".join(self.demangle(sym))
+            row = list(set(row.split(',')))
+            prow = checksum + ','
+            prow = prow + ",".join(row)
+
         prow = prow + "," + os.path.splitext(filename)[0]
         return prow
 
@@ -213,15 +253,6 @@ class FileHandler:
         return re.compile(r'\W+', re.UNICODE).split(text)
 
     def demangle(self, name):
-        cmd = 'c++filt ' + name
-        process = subprocess.Popen(
-            cmd,
-            shell=True,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE)
-        (result, error) = process.communicate()
-        rc = process.wait()
-        process.stdout.close()
-
-        results = self.stripNonAlphaNum(result.decode('utf-8'))
+        dstring = demangle(name)
+        results = self.stripNonAlphaNum(dstring)
         return ' '.join(results).split()
