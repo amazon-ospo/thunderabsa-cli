@@ -8,6 +8,7 @@ import subprocess
 from os import path
 from string import digits
 from . import CtagsHandler
+from demangler import demangle
 
 
 class FileHandler:
@@ -102,7 +103,6 @@ class FileHandler:
             rc = process.wait()
             process.stdout.close()
             rstTXT = result.decode('utf-8')
-
             row = ""
             results = self.stripNonAlphaNum(','.join(rstTXT.split()))
             for x in results:
@@ -149,7 +149,6 @@ class FileHandler:
     def handle_mach_o(self, filepath, filename, checksum):
         fullPath = os.path.join(filepath, filename)
         libSO = lief.parse(fullPath)
-        print('parser')
         symbols = []
         remove_digits = str.maketrans(',', ',', digits)
         for i in libSO.symbols:
@@ -160,8 +159,30 @@ class FileHandler:
         symbols = list(set(symbols))
         while("" in symbols):
             symbols.remove("")
+
         prow = checksum + ','
         prow = prow + ",".join(symbols)
+
+        if len(symbols) <=1:
+            cmd = 'strings -n 5 ' + fullPath
+            process = subprocess.Popen(
+                cmd,
+                shell=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE)
+            (result, error) = process.communicate()
+            rc = process.wait()
+            process.stdout.close()
+            rstTXT = result.decode('utf-8')
+            row = ""
+            results = self.stripNonAlphaNum(','.join(rstTXT.split()))
+            for x in results:
+                if x.startswith('_Z'):
+                    row = row + ",".join(self.demangle(x))
+            row = list(set(row.split(',')))
+            prow = checksum + ','
+            prow = prow + ",".join(row)
+
         prow = prow + "," + os.path.splitext(filename)[0]
         return prow
 
@@ -232,15 +253,7 @@ class FileHandler:
         return re.compile(r'\W+', re.UNICODE).split(text)
 
     def demangle(self, name):
-        cmd = 'c++filt ' + name
-        process = subprocess.Popen(
-            cmd,
-            shell=True,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE)
-        (result, error) = process.communicate()
-        rc = process.wait()
-        process.stdout.close()
-
-        results = self.stripNonAlphaNum(result.decode('utf-8'))
-        return ' '.join(results).split()
+        dstring = demangle(name)
+        results = self.stripNonAlphaNum(dstring)
+        print(name, dstring)
+        return results

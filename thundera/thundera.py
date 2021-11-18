@@ -38,7 +38,7 @@ def cli(target, workdir):
     print(banner_obj)
     print('')
 
-    cmdlist = ["ctags", "readelf", "c++filt", "exiftool", "strings"]
+    cmdlist = ["ctags", "readelf", "exiftool", "strings"]
     for cmd in cmdlist:
         if which(cmd) is None:
             eMSG = "Thundera requires "+cmd+" to run"
