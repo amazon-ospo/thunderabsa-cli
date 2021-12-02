@@ -1,0 +1,8 @@
+# Thundera Group
+## Summary
+
+## Development
+### Libraries
+pip3 install twine setuptools wheel pycodestyle pyinstaller virtualenv
+
+nm --demangle --dynamic --defined-only --extern-only

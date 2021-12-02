@@ -133,5 +133,4 @@ dmypy.json
 *.jar
 *.csv
 testfiles/
-scripts/
 log
