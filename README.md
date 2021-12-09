@@ -13,7 +13,7 @@ ThunderaBSA-CLI requires a few tools to be available on your system:
 
 $ sudo apt install python3-pip
 
-$ sudo apt install universal-ctags elfutils binutils libimage-exiftool-perl
+$ sudo apt install universal-ctags elfutils binutils libimage-exiftool-perl g++
 
 $ pip3 install thundera-bsa
 

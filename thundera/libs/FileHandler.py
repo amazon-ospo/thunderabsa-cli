@@ -90,7 +90,7 @@ class FileHandler:
             process.stdout.close()
             rstTXT = result.decode('utf-8')
             results = self.stripNonAlphaNum(' '.join(rstTXT.split()))
-            prow = checksum + ",".join(results)
+            prow = checksum + "," + ",".join(results)
             prow = prow + "," + os.path.splitext(filename)[0]
 
             cmd = 'strings -n 5 ' + fullpath
@@ -110,8 +110,7 @@ class FileHandler:
                     row = row + ",".join(self.demangle(x))
             row = list(set(row.split(',')))
 
-            prow = prow + ",".join(row)
-            prow = prow + "," + os.path.splitext(filename)[0]
+            prow = prow + ",".join(row) + "," + os.path.splitext(filename)[0]
 
             return prow
 
@@ -163,7 +162,7 @@ class FileHandler:
         prow = checksum + ','
         prow = prow + ",".join(symbols)
 
-        if len(symbols) <=1:
+        if len(symbols) <= 1:
             cmd = 'strings -n 5 ' + fullPath
             process = subprocess.Popen(
                 cmd,
