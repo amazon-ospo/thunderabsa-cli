@@ -135,6 +135,17 @@ class FileScanner:
         # for key in self.symbols:
         #    print(key, '->', self.symbols[key])
 
+        zipObj = ZipFile(self.rfname+'-reports.zip', 'w')
+        zipObj.write(self.rfname+'-archive.csv')
+        zipObj.write(self.rfname+'-files.csv')
+        zipObj.write(self.rfname+'-metadata.csv')
+        zipObj.write(self.rfname+'-symbols.csv')
+        zipObj.close()
+        os.remove(self.rfname+'-archive.csv')
+        os.remove(self.rfname+'-files.csv')
+        os.remove(self.rfname+'-metadata.csv')
+        os.remove(self.rfname+'-symbols.csv')
+
         dt = str(round(time.time() - ts, 2))
         self.debug.info('Scan took ' + dt + ' seconds')
 

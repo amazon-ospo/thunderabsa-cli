@@ -23,6 +23,7 @@ rm -rf *.csv
 #thundera --help
 #thundera ./testfiles/libwebrtc.a.zip
 thundera ./testfiles/libLogger.a
+#thundera ./testfiles/libmedia.dylib
 
 echo "Deactivating Thundera ENV"
 deactivate
