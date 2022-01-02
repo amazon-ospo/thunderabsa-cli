@@ -15,7 +15,6 @@ LONG_DESCRIPTION = (HERE / "README.md").read_text()
 LONG_DESC_TYPE = "text/markdown"
 INSTALL_REQUIRES = [
       'click',
-      'terminal_banner',
       'python-magic',
       'python-slugify',
       'binaryornot',
