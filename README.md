@@ -1,3 +1,5 @@
+**This project is archived and is no longer being actively developed or monitored.**
+
 # ThunderaBSA-Cli
 
 ThunderaBSA it's a Binary Static Analysis tool that infers what Open Source packages are present on binary apps by searching for "symbols."
